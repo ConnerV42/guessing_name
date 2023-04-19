@@ -4,6 +4,24 @@ use std::io;
 
 // Run `cargo doc --open` to view this crate's documentation.
 
+pub struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {}.", value);
+        }
+
+        Guess { value }
+    }
+
+    pub fn value(&self) -> i32 {
+        self.value
+    }
+}
+
 fn main() {
     println!("Guess the number between 1 and 100!");
 
@@ -20,17 +38,14 @@ fn main() {
 
         // This is an example of shadowing, a feature of Rust that is
         // often used to convert a value from one type to another.
-        let guess: u32 = match guess.trim().parse() {
+        let guess: i32 = match guess.trim().parse() {
             Ok(num) => num,
-            Err(_) => {
-               println!("Type a valid number!");
-               continue;
-            },
+            Err(_) => continue,
         };
-            
-        println!("You guessed: {guess}");
 
-        match guess.cmp(&secret_number) {
+        let guess = Guess::new(guess);
+
+        match guess.value.cmp(&secret_number) {
             Ordering::Less => println!("Too small!"),
             Ordering::Greater => println!("Too big!"),
             Ordering::Equal => {
